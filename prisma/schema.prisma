@@ -1,0 +1,42 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Exercise {
+  id             String           @id @default(uuid())
+  name           String
+  ExerciseResult ExerciseResult[]
+
+  @@index([name])
+}
+
+model Training {
+  id          String           @id @default(uuid())
+  exercises   ExerciseResult[]
+  createdAt   DateTime         @default(now())
+  updatedAt   DateTime         @updatedAt
+  performedAt DateTime         @default(now())
+  location    String
+  userId      String
+}
+
+model ExerciseResult {
+  id          String   @id @default(uuid())
+  exercise    Exercise @relation(fields: [exerciseId], references: [id])
+  exerciseId  String
+  training    Training @relation(fields: [trainingId], references: [id], onDelete: Cascade)
+  trainingId  String
+  weight      Float    @default(0.0)
+  repetitions Int?     @default(0)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  rpe         Int?     @default(0)
+}
