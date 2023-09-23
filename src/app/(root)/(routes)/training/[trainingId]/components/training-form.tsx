@@ -66,8 +66,8 @@ const formSchema = z.object({
 				.string({ required_error: 'Exercise is required' })
 				.nonempty('Pick an exercise'),
 			weight: z.coerce.number({ required_error: 'Weight is required' }),
-			repetitions: z.coerce.number().min(0).optional(),
-			rpe: z.coerce.number().min(0).max(10).optional(),
+			repetitions: z.coerce.number().min(0),
+			rpe: z.coerce.number().min(0).max(10),
 		})
 	),
 });
@@ -78,6 +78,7 @@ const TrainingForm = ({ initialData, exercises }: TrainingFormProps) => {
 
 	const form = useForm<z.infer<typeof formSchema>>({
 		resolver: zodResolver(formSchema),
+		// @ts-ignore
 		defaultValues: initialData || {
 			performedAt: new Date(new Date().setHours(0, 0, 0, 0)),
 			location: '',
